@@ -4,10 +4,10 @@ from flask import request
 from twython import Twython
 from pprint import pprint
 from textblob import TextBlob
+import queries
 
-
-APP_KEY = "Qn4Nx6C9LtoAlKtYLtoNQX2uY"
-APP_SECRET = "mFk56Ec74tSW74Dp8uQqmyxMHKVeMAgQU8cLjRFqV3Ro87cSiN"
+# APP_KEY = "Qn4Nx6C9LtoAlKtYLtoNQX2uY"
+# APP_SECRET = "mFk56Ec74tSW74Dp8uQqmyxMHKVeMAgQU8cLjRFqV3Ro87cSiN"
 
 
 app = Flask(__name__)
@@ -20,24 +20,30 @@ def home_page(name=None):
 
 @app.route('/submit', methods=['POST', 'GET'])
 def process_query():
-	error = None
-	twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
-	ACCESS_TOKEN = twitter.obtain_access_token()
-	twitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)
+	# error = None
+	# twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
+	# ACCESS_TOKEN = twitter.obtain_access_token()
+	# twitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)
+	data = []
 
 	if request.method == 'POST':
-		user_input = request.form["query"]
-
-		twitter_json = twitter.search(q=user_input, count = 100)
-
-		data = []
-		for status in twitter_json['statuses']:
-		    text = status['text']
-		    blob = TextBlob(text)
-		    dic = {'text': text, 'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
-		    data.append(dic)
+		user_query = request.form["query"]
+		user_lat = request.form["lat"]
+		user_lon = request.form["lon"]
+		user_rad = request.form["rad"]
 
 
-	return render_template('results.html', results = data)
+		if user_query:
+			data = queries.single_query(query=user_query)
+		elif (user_lat and user_lon):
+			user_geo = "%s,%s,%smi" % (user_lat, user_lon, user_rad)
+			data = queries.geo_query(geocode=user_geo, count=100)
+			#data = queries.geo_query(geocode='34.07098,-118.4448,1mi', count=100)
+
+
+	if data:
+		return render_template('results.html', results = data)
+	else:
+		return('no data')
 if __name__ == '__main__':
-	app.run()
+	app.run(debug=True)

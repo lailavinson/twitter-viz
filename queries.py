@@ -9,20 +9,25 @@ twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
 ACCESS_TOKEN = twitter.obtain_access_token()
 twitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)
 
-
-# Single query
 query = 'python'
 nTweets = 100
 
-twitter_json = twitter.search(q = query, count = nTweets)
-data = []
-for status in twitter_json['statuses']:
-    text = status['text']
-    blob = TextBlob(text)
-    dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
-    data.append(dic)
+# Single query
+def single_query(query=query, count=nTweets):
+    twitter_json = twitter.search(q = query, count = nTweets)
+    data = []
+    for status in twitter_json['statuses']:
+        text = status['text']
+        blob = TextBlob(text)
+        dic = {
+            'polarity': blob.sentiment.polarity, 
+            'subjectivity': blob.sentiment.subjectivity,
+            'text': text
+        }
+        data.append(dic)
+    # JSON = json.dumps(data)
+    return data
 
-JSON = json.dumps(data)
 
 
 #Multiple queries
@@ -49,15 +54,20 @@ JSON = json.dumps(data)
 
 
 # Geocode query
-geo = '34.07098,-118.4448, 1mi' # 1mi radius around UCLA
-nTweets = 100
+geo = '34.07098,-118.4448,1mi' # 1mi radius around UCLA
+# nTweets = 100
 
-twitter_json = twitter.search(geocode = geo, count = nTweets)
-data = []
-for status in twitter_json['statuses']:
-    text = status['text']
-    blob = TextBlob(text)
-    dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
-    data.append(dic)
-
-JSON = json.dumps(data)
+def geo_query(geocode=geo, count=100):
+    twitter_json = twitter.search(geocode = geocode, count = count)
+    data = []
+    for status in twitter_json['statuses']:
+        text = status['text']
+        blob = TextBlob(text)
+        dic = {
+            'polarity': blob.sentiment.polarity, 
+            'subjectivity': blob.sentiment.subjectivity,
+            'text': text
+            }
+        data.append(dic)
+    #JSON = json.dumps(data)
+    return data
