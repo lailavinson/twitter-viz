@@ -25,7 +25,7 @@ for status in twitter_json['statuses']:
 JSON = json.dumps(data)
 
 
-""" Multiple queries
+#Multiple queries
 nTweets = 2
 queries = ['ucla', 'usc']
 
@@ -46,4 +46,18 @@ for twitter_json in twitter_jsons:
     data.append(wrapper)
 
 JSON = json.dumps(data)
-"""
+
+
+# Geocode query
+geo = '34.07098,-118.4448, 1mi' # 1mi radius around UCLA
+nTweets = 100
+
+twitter_json = twitter.search(geocode = geo, count = nTweets)
+data = []
+for status in twitter_json['statuses']:
+    text = status['text']
+    blob = TextBlob(text)
+    dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
+    data.append(dic)
+
+JSON = json.dumps(data)
