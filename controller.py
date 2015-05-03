@@ -6,10 +6,6 @@ from pprint import pprint
 from textblob import TextBlob
 import queries
 
-# APP_KEY = "Qn4Nx6C9LtoAlKtYLtoNQX2uY"
-# APP_SECRET = "mFk56Ec74tSW74Dp8uQqmyxMHKVeMAgQU8cLjRFqV3Ro87cSiN"
-
-
 app = Flask(__name__)
 
 @app.route('/')
