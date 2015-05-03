@@ -33,12 +33,12 @@ def process_query():
 		user_rad = request.form["rad"]
 
 
-		if user_query:
-			data = queries.single_query(query=user_query)
-		elif (user_lat and user_lon):
+		if (user_lat and user_lon):
 			user_geo = "%s,%s,%smi" % (user_lat, user_lon, user_rad)
-			data = queries.geo_query(geocode=user_geo, count=100)
+			data = queries.geo_query(query = user_query, geocode=user_geo, count=100)
 			#data = queries.geo_query(geocode='34.07098,-118.4448,1mi', count=100)
+		elif user_query:
+			data = queries.single_query(query=user_query)
 
 
 	if data:

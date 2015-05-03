@@ -31,7 +31,7 @@ def single_query(query=query, count=nTweets):
 
 
 #Multiple queries
-nTweets = 2
+# nTweets = 2
 queries = ['ucla', 'usc']
 
 twitter_jsons = []
@@ -57,8 +57,8 @@ JSON = json.dumps(data)
 geo = '34.07098,-118.4448,1mi' # 1mi radius around UCLA
 # nTweets = 100
 
-def geo_query(geocode=geo, count=100):
-    twitter_json = twitter.search(geocode = geocode, count = count)
+def geo_query(query=query, geocode=geo, count=100):
+    twitter_json = twitter.search(q = query, geocode = geocode, count = count)
     data = []
     for status in twitter_json['statuses']:
         text = status['text']
