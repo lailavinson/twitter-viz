@@ -3,6 +3,8 @@ from flask import render_template
 from flask import request
 from twython import Twython
 from pprint import pprint
+from textblob import TextBlob
+
 
 APP_KEY = "Qn4Nx6C9LtoAlKtYLtoNQX2uY"
 APP_SECRET = "mFk56Ec74tSW74Dp8uQqmyxMHKVeMAgQU8cLjRFqV3Ro87cSiN"
@@ -23,11 +25,19 @@ def process_query():
 	ACCESS_TOKEN = twitter.obtain_access_token()
 	twitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)
 
-
 	if request.method == 'POST':
 		user_input = request.form["query"]
 
-	results = twitter.search(q=user_input)
-	return render_template('results.html', results = user_input)
+		twitter_json = twitter.search(q=user_input, count = 100)
+
+		data = []
+		for status in twitter_json['statuses']:
+		    text = status['text']
+		    blob = TextBlob(text)
+		    dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
+		    data.append(dic)
+
+
+	return render_template('results.html', results = data)
 if __name__ == '__main__':
 	app.run()
