@@ -1,3 +1,16 @@
 <html>
-<p> Search term was {{ results }}</p>
+<head>
+<script>
+var data = {{ results | tojson }};
+console.log(data);
+</script>
+</head>
+<ul>
+{% for result in results %}
+    <li>{{ result }}</li>
+{% endfor %}
+</ul>
+
+
+
 </html>
