@@ -34,7 +34,7 @@ def process_query():
 		for status in twitter_json['statuses']:
 		    text = status['text']
 		    blob = TextBlob(text)
-		    dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
+		    dic = {'text': text, 'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
 		    data.append(dic)
 
 
