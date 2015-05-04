@@ -13,9 +13,11 @@ console.log(data);
       function drawChart() {
 	  var ret = {{ results | tojson }};
 
-	  var arr = [['Polarity', 'Subjectivity']];
+	  var arr = [['Polarity', 'Subjectivity', {label: 'Text', id: 'Text', type: 'string', role: 'tooltip'}]];
 	  for (var k = 0; k < ret.length; k++) {
-		  arr.push([parseFloat(ret[k].polarity.toFixed(3)), parseFloat(ret[k].subjectivity.toFixed(3))]);
+		  arr.push([parseFloat(ret[k].polarity.toFixed(3)), 
+		  			parseFloat(ret[k].subjectivity.toFixed(3)),
+		  			ret[k].text]);
 	  }
 	  console.log(arr);
 
