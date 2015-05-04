@@ -4,8 +4,40 @@
 var data = {{ results | tojson }};
 console.log(data);
 </script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+	  var ret = {{ results | tojson }};
+
+	  var arr = [['Polarity', 'Subjectivity']];
+	  for (var k = 0; k < ret.length; k++) {
+		  arr.push([parseFloat(ret[k].polarity.toFixed(3)), parseFloat(ret[k].subjectivity.toFixed(3))]);
+	  }
+	  console.log(arr);
+
+        var data = google.visualization.arrayToDataTable(arr);
+
+        var options = {
+          title: 'Mood',
+          hAxis: {title: 'Polarity', minValue: -1, maxValue: 1},
+          vAxis: {title: 'Subjectivity', minValue: 0, maxValue: 1},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
 </head>
 <ol>
+
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+
 {% for result in results %}
     <li>{{ result.text }}</li>
     	<ul>
@@ -14,7 +46,6 @@ console.log(data);
     	</ul>
 {% endfor %}
 </ol>
-
 
 
 </html>
