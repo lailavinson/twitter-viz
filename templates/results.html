@@ -40,23 +40,43 @@
      <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
      <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <!-- CSS -->
-      <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"/>
+       <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
   </head>
+
   <body>
-    <div class="container form">
-      <form action="/submit" method="POST">
-          Lat: <input name="lat" type="text" value="34.07098"/> 
-          <br />
-          Lon: <input name="lon" type="text" value="-118.4448" />
-          <br />
-          Rad: <input name="rad" type="text" value="1"/>
-          <br />
-          Search: <input name="query" type="text" />
-          <br />
+
+    <div class="container row intro text-center">
+      <div class="col-xs-5 col-md-3 col-lg-1 text-center">
+        <h1>#TwitterMood </h1>
+        <h2> discovering how people feel - in 140 characters or less </h2>
+      </div>
+      <a href="#search-form" class="btn btn-lg btn-info" role="button"> Try Now </a>
+    </div>
+    <div class="container row form-container" id="search-form">
+      <form action="/submit" method="POST" class="col-xs-12 col-sm-6 col-md-8 col-md-offset-2">
+        <div class="form-group col-xs-12 col-sm-6 col-md-8">
+          <label> Lat: </label> 
+          <input name="lat" type="text" value="34.07098" class="form-control"/> 
+        </div>
+        <div class="form-group col-xs-12 col-sm-6 col-md-8">
+          <label>Lon:</label>
+          <input name="lon" type="text" value="-118.4448" class="form-control"/>
+        </div>
+        <div class="form-group col-xs-12 col-sm-6 col-md-8">
+          <label>Rad: </label>
+          <input name="rad" type="text" value="1" class="form-control"/>
+        </div>
+        <div class="form-group col-xs-12 col-sm-6 col-md-8">
+          <label>Search:</label>
+          <input name="query" type="text" class="form-control" />
+          </div>
           <input type="submit">
       </form>
     </div>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+
+    <div id="chart_div"></div>
     <div id="result_list">
       <ol>
       {% for result in results %}

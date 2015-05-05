@@ -1,4 +1,53 @@
-.form{
-	color: green;
+body {
+	background-color: #000;
+	color: #fff;
+}
+
+.intro {
+    width: 100%;
+    height: auto;
+    display: table;
+    text-align: center;
+    letter-spacing: 2px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+        height: 690px;
 
 }
+
+.text-center {
+	padding-top: 100px;
+}
+h1, h2 {
+	vertical-align: middle;
+}
+
+form{
+	width: 100%;
+	height: auto;
+	    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+        height: 690px;
+    padding-top: 5%;
+}
+
+
+input.form-control {
+	height: 25px;
+}
+
+
+
+#chart_div {
+	height: auto;
+	width: 100%
+}
+
+input.form-control {
+	width: 100%;
+}
+
