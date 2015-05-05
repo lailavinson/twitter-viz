@@ -1,53 +1,72 @@
 <html>
-<head>
-<script>
-var data = {{ results | tojson }};
-console.log(data);
-</script>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+    var data = {{ results | tojson }};
+    console.log(data);
+    </script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+          google.load("visualization", "1", {packages:["corechart"]});
+          google.setOnLoadCallback(drawChart);
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
+          function drawChart() {
+        var ret = {{ results | tojson }};
 
-      function drawChart() {
-	  var ret = {{ results | tojson }};
+        var arr = [['Polarity', 'Subjectivity', {label: 'Text', id: 'Text', type: 'string', role: 'tooltip'}]];
+        for (var k = 0; k < ret.length; k++) {
+          arr.push([parseFloat(ret[k].polarity.toFixed(3)), 
+                parseFloat(ret[k].subjectivity.toFixed(3)),
+                ret[k].text]);
+        }
+        console.log(arr);
 
-	  var arr = [['Polarity', 'Subjectivity', {label: 'Text', id: 'Text', type: 'string', role: 'tooltip'}]];
-	  for (var k = 0; k < ret.length; k++) {
-		  arr.push([parseFloat(ret[k].polarity.toFixed(3)), 
-		  			parseFloat(ret[k].subjectivity.toFixed(3)),
-		  			ret[k].text]);
-	  }
-	  console.log(arr);
+            var data = google.visualization.arrayToDataTable(arr);
 
-        var data = google.visualization.arrayToDataTable(arr);
+            var options = {
+              title: 'Mood',
+              hAxis: {title: 'Polarity', minValue: -1, maxValue: 1},
+              vAxis: {title: 'Subjectivity', minValue: 0, maxValue: 1},
+              legend: 'none'
+            };
 
-        var options = {
-          title: 'Mood',
-          hAxis: {title: 'Polarity', minValue: -1, maxValue: 1},
-          vAxis: {title: 'Subjectivity', minValue: 0, maxValue: 1},
-          legend: 'none'
-        };
-
-        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
+            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+          }
     </script>
 
-</head>
-<ol>
-
-<div id="chart_div" style="width: 900px; height: 500px;"></div>
-
-{% for result in results %}
-    <li>{{ result.text }}</li>
-    	<ul>
-    		<li> Polarity: {{ result.polarity }} </li>
-    		<li> Subjectivity {{ result.subjectivity }} </li>
-    	</ul>
-{% endfor %}
-</ol>
-
-
+    <!-- JS -->
+     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>    
+     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- CSS -->
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  </head>
+  <body>
+    <div class="container form">
+      <form action="/submit" method="POST">
+          Lat: <input name="lat" type="text" value="34.07098"/> 
+          <br />
+          Lon: <input name="lon" type="text" value="-118.4448" />
+          <br />
+          Rad: <input name="rad" type="text" value="1"/>
+          <br />
+          Search: <input name="query" type="text" />
+          <br />
+          <input type="submit">
+      </form>
+    </div>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div id="result_list">
+      <ol>
+      {% for result in results %}
+          <li>{{ result.text }}</li>
+          	<ul>
+          		<li> Polarity: {{ result.polarity }} </li>
+          		<li> Subjectivity {{ result.subjectivity }} </li>
+          	</ul>
+      {% endfor %}
+      </ol>
+    </div>
+  </body>
 </html>
