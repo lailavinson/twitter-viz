@@ -11,9 +11,12 @@ twitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)
 
 query = 'python'
 nTweets = 100
+noRetweets = True
 
 # Single query
 def single_query(query=query, count=nTweets):
+    if(noRetweets):
+        query += " -'RT @'"
     twitter_json = twitter.search(q = query, count = nTweets)
     data = []
     for status in twitter_json['statuses']:
@@ -34,8 +37,11 @@ def single_query(query=query, count=nTweets):
 # nTweets = 2
 queries = ['ucla', 'usc']
 
+def multi_query(query=queries, count=nTweets):
 twitter_jsons = []
 for query in queries:
+    if(noRetweets):
+        query += " -'RT @'"
     results = twitter.search(q = query, count = nTweets)
     twitter_jsons.append(results)
 
@@ -58,6 +64,8 @@ geo = '34.07098,-118.4448,1mi' # 1mi radius around UCLA
 # nTweets = 100
 
 def geo_query(query=query, geocode=geo, count=100):
+    if(noRetweets):
+        query += " -'RT @'"
     twitter_json = twitter.search(q = query, geocode = geocode, count = count)
     data = []
     for status in twitter_json['statuses']:
