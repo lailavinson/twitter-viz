@@ -11,7 +11,8 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/', methods=['POST', 'GET'])
 def home_page(name=None):
-	return render_template('template.html', name=name)
+        # return render_template('template.html', name=name)
+	return render_template('results.html', results = [])
 
 
 @app.route('/submit', methods=['POST', 'GET'])
