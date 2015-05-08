@@ -38,25 +38,25 @@ def single_query(query=query, count=nTweets):
 queries = ['ucla', 'usc']
 
 def multi_query(query=queries, count=nTweets):
-twitter_jsons = []
-for query in queries:
-    if(noRetweets):
-        query += " -'RT @'"
-    results = twitter.search(q = query, count = nTweets)
-    twitter_jsons.append(results)
+    twitter_jsons = []
+    for query in queries:
+        if(noRetweets):
+            query += " -'RT @'"
+        results = twitter.search(q = query, count = nTweets)
+        twitter_jsons.append(results)
 
-data = []
-for twitter_json in twitter_jsons:
-    curr_data = []
-    for status in twitter_json['statuses']:
-        text = status['text']
-        blob = TextBlob(text)
-        dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
-        curr_data.append(dic)
-	wrapper = { twitter_json['search_metadata']['query']: curr_data }
-    data.append(wrapper)
+    data = []
+    for twitter_json in twitter_jsons:
+        curr_data = []
+        for status in twitter_json['statuses']:
+            text = status['text']
+            blob = TextBlob(text)
+            dic = {'polarity': blob.sentiment.polarity, 'subjectivity': blob.sentiment.subjectivity }
+            curr_data.append(dic)
+    	wrapper = { twitter_json['search_metadata']['query']: curr_data }
+        data.append(wrapper)
 
-JSON = json.dumps(data)
+    JSON = json.dumps(data)
 
 
 # Geocode query
