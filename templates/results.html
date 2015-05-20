@@ -8,35 +8,40 @@
     </script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script>
-          google.load("visualization", "1", {packages:["corechart"]});
-          google.setOnLoadCallback(drawChart);
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart);
 
-          function drawChart() {
-        var ret = {{ results | tojson }};
+		function drawChart() {
+			var res = {{ results | tojson }};
 
-        var arr = [['Polarity', 'Subjectivity', {label: 'Text', id: 'Text', type: 'string', role: 'tooltip'}]];
-        for (var k = 0; k < ret.length; k++) {
-          arr.push([parseFloat(ret[k].polarity.toFixed(3)), 
-                parseFloat(ret[k].subjectivity.toFixed(3)),
-                ret[k].text]);
-        }
-        console.log(arr);
+			var arr = [['Polarity', 'Subjectivity', {label: 'Text', id: 'Text', type: 'string', role: 'tooltip'}]];
+			for (var k = 0; k < res.length; k++) {
+				/* Round polarity/subjectivity to 3 decimal places if displaying the values
+				   arr.push([parseFloat(res[k].polarity.toFixed(3)), 
+						parseFloat(res[k].subjectivity.toFixed(3)),
+						res[k].text]);
+				*/
+				arr.push([res[k].polarity,
+						res[k].subjectivity,
+						res[k].text]);
+			}
+			console.log(arr);
 
-            var data = google.visualization.arrayToDataTable(arr);
+			var data = google.visualization.arrayToDataTable(arr);
 
-            var options = {
-              title: 'Mood',
-              hAxis: {title: 'Polarity', minValue: -1, maxValue: 1},
-              vAxis: {title: 'Subjectivity', minValue: 0, maxValue: 1},
-              legend: 'none'
-            };
+			var options = {
+				title: 'Mood',
+				hAxis: {title: 'Polarity', minValue: -1, maxValue: 1},
+				vAxis: {title: 'Subjectivity', minValue: 0, maxValue: 1},
+				legend: 'none'
+			};
 
-            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+			var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+			chart.draw(data, options);
 
 			if(arr.length != 1) // not empty
-				window.location = "submit#chart_div"
-          }
+				window.location = "submit#chart_div";
+		}
     </script>
 
     <!-- JS -->
@@ -69,7 +74,7 @@
         </div>
         <div class="form-group col-xs-12 col-sm-6 col-md-8">
           <label>Rad: </label>
-          <input name="rad" type="text" value="1" class="form-control"/>
+          <input name="rad" type="text" value="3" class="form-control"/>
         </div>
         <div class="form-group col-xs-12 col-sm-6 col-md-8">
           <label>Search:</label>
@@ -87,10 +92,16 @@
     <div id="result_list">
       <ol>
       {% for result in results %}
-          <li>{{ result.text }}</li>
+		  <!-- Make Instagram links clickable -->
+		  {% if result.text[-17:-10] == '//t.co/' %}
+		  <li>{{ result.text[:-23] }} <a href="{{result.text[-23:]}}">{{result.text[-23:]}}</a> </li>
+		  {% else %}
+		  <li>{{ result.text }}</li>
+		  {% endif %}
           	<ul>
-          		<li> Polarity: {{ result.polarity }} </li>
-          		<li> Subjectivity {{ result.subjectivity }} </li>
+				<!-- Round to 2 decimal places -->
+				<li> Polarity: {{ "{0:.2f}".format(result.polarity) }} </li>
+				<li> Subjectivity: {{ "{0:.2f}".format(result.subjectivity) }} </li>
           	</ul>
       {% endfor %}
       </ol>
